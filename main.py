@@ -52,7 +52,7 @@ def buscar_jogo(id: int):
     return resposta.data[0]
 
 
-@@app.post("/jogos", status_code=status.HTTP_201_CREATED)
+@app.post("/jogos", status_code=status.HTTP_201_CREATED)
 def cadastrar_jogo(jogo: JogoRequest):
     # Validação da nota
     if jogo.nota < 0 or jogo.nota > 10:
