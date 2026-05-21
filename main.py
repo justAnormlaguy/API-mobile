@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 from supabase import create_client, Client
 import uuid
+from fastapi.middleware.cors import CORSMiddleware
 
 SUPABASE_URL = "https://fppvpwqpvjumgrvixspu.supabase.co"
 SUPABASE_KEY = "sb_publishable_ppgrPprdn0v43tQRjUtXlA_DW_ULofX"
@@ -9,6 +10,14 @@ SUPABASE_KEY = "sb_publishable_ppgrPprdn0v43tQRjUtXlA_DW_ULofX"
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 app = FastAPI(title="API Biblioteca de Jogos")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"], 
+    allow_headers=["*"], 
+)
 
 class LoginRequest(BaseModel):
     email: str
