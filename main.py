@@ -52,8 +52,12 @@ def buscar_jogo(id: int):
     return resposta.data[0]
 
 
-@app.post("/jogos", status_code=status.HTTP_201_CREATED)
+@@app.post("/jogos", status_code=status.HTTP_201_CREATED)
 def cadastrar_jogo(jogo: JogoRequest):
+    # Validação da nota
+    if jogo.nota < 0 or jogo.nota > 10:
+        raise HTTPException(status_code=400, detail="A nota deve ser de 0 a 10")
+
     resposta = supabase.table("Jogos-API").insert(jogo.dict()).execute()
 
     if not resposta.data:
@@ -63,13 +67,16 @@ def cadastrar_jogo(jogo: JogoRequest):
 
 @app.put("/jogos/{id}", status_code=status.HTTP_200_OK)
 def atualizar_jogo(id: int, jogo_atualizado: JogoRequest):
+    # Validação da nota
+    if jogo_atualizado.nota < 0 or jogo_atualizado.nota > 10:
+        raise HTTPException(status_code=400, detail="A nota deve ser de 0 a 10")
+
     existente = supabase.table("Jogos-API").select("*").eq("id", id).execute()
     if not existente.data:
         raise HTTPException(status_code=404, detail="Jogo não encontrado")
 
     resposta = supabase.table("Jogos-API").update(jogo_atualizado.dict()).eq("id", id).execute()
     return resposta.data[0]
-
 
 @app.delete("/jogos/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def deletar_jogo(id: int):
